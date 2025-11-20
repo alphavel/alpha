@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Controllers;
+
+use Alphavel\Framework\Controller;
+use Alphavel\Framework\Request;
+use Alphavel\Framework\Response;
+
+/**
+ * {{ CLASS }}
+ */
+class {{ CLASS }} extends Controller
+{
+    /**
+     * Handle the request
+     */
+    public function __invoke(Request $request): Response
+    {
+        return Response::success([
+            'message' => 'Hello from {{ CLASS }}'
+        ]);
+    }
+}

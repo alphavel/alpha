@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Alphavel Alpha CLI
+ * 
+ * Intelligent code generation and scaffolding toolkit
+ */
+
+// Find autoloader
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php',      // Package installed as dependency
+    __DIR__ . '/../../../autoload.php',       // Package installed globally
+    __DIR__ . '/../../alphavel/alphavel/vendor/autoload.php', // Development
+];
+
+foreach ($autoloadPaths as $file) {
+    if (file_exists($file)) {
+        require $file;
+        define('ALPHA_AUTOLOAD', $file);
+        break;
+    }
+}
+
+if (!defined('ALPHA_AUTOLOAD')) {
+    fwrite(STDERR, "Error: Could not find autoloader. Run 'composer install'.\n");
+    exit(1);
+}
+
+use Alphavel\Alpha\Console\Console;
+
+// Create console application
+$console = new Console();
+$console->setName('alpha');
+$console->setVersion('1.0.0');
+
+// Auto-discover commands from framework
+$console->autodiscover(__DIR__ . '/../src/Console/Commands');
+
+// Auto-discover commands from application (if running in project context)
+$appCommandsPath = getcwd() . '/app/Console/Commands';
+if (is_dir($appCommandsPath)) {
+    $console->autodiscover($appCommandsPath);
+}
+
+// Run console
+exit($console->run($argv));

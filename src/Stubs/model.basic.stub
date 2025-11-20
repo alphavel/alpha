@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+use Alphavel\Database\Model;
+
+/**
+ * {{ CLASS }} Model
+ */
+class {{ CLASS }} extends Model
+{
+    /**
+     * The table associated with the model
+     */
+    protected string $table = '{{ table }}';
+
+    /**
+     * The primary key for the model
+     */
+    protected string $primaryKey = 'id';
+
+    /**
+     * The attributes that are mass assignable
+     */
+    protected array $fillable = [];
+
+    /**
+     * The attributes that should be cast
+     */
+    protected array $casts = [];
+}

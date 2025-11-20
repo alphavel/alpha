@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Controllers;
+
+use Alphavel\Framework\Controller;
+use Alphavel\Framework\Request;
+use Alphavel\Framework\Response;
+use App\Models\{{ MODEL }};
+
+/**
+ * {{ CLASS }} - RESTful Resource Controller
+ */
+class {{ CLASS }} extends Controller
+{
+    /**
+     * Display a listing of the resource
+     */
+    public function index(Request $request): Response
+    {
+        $items = {{ MODEL }}::all();
+        
+        return Response::success($items);
+    }
+
+    /**
+     * Display the specified resource
+     */
+    public function show(Request $request, int $id): Response
+    {
+        $item = {{ MODEL }}::find($id);
+        
+        if (!$item) {
+            return Response::error('Not found', 404);
+        }
+        
+        return Response::success($item);
+    }
+
+    /**
+     * Store a newly created resource
+     */
+    public function store(Request $request): Response
+    {
+        $data = $request->only([{{ fillable }}]);
+        
+        // Validate
+        $errors = $request->validate($data, [
+{{ create_rules }}
+        ]);
+        
+        if ($errors) {
+            return Response::error('Validation failed', 422, $errors);
+        }
+        
+        $item = {{ MODEL }}::create($data);
+        
+        return Response::success($item, 201);
+    }
+
+    /**
+     * Update the specified resource
+     */
+    public function update(Request $request, int $id): Response
+    {
+        $item = {{ MODEL }}::find($id);
+        
+        if (!$item) {
+            return Response::error('Not found', 404);
+        }
+        
+        $data = $request->only([{{ fillable }}]);
+        
+        // Validate
+        $errors = $request->validate($data, [
+{{ update_rules }}
+        ]);
+        
+        if ($errors) {
+            return Response::error('Validation failed', 422, $errors);
+        }
+        
+        foreach ($data as $key => $value) {
+            $item->$key = $value;
+        }
+        
+        $item->save();
+        
+        return Response::success($item);
+    }
+
+    /**
+     * Remove the specified resource
+     */
+    public function destroy(Request $request, int $id): Response
+    {
+        $item = {{ MODEL }}::find($id);
+        
+        if (!$item) {
+            return Response::error('Not found', 404);
+        }
+        
+        $item->delete();
+        
+        return Response::success(['message' => 'Deleted successfully']);
+    }
+}
