@@ -350,4 +350,40 @@ abstract class Command
         
         return $stub;
     }
+
+    /**
+     * Public method wrappers for use by external classes (like PackageRecipe)
+     */
+    
+    public function output(string $message, string $type = 'line'): void
+    {
+        match($type) {
+            'info' => $this->info($message),
+            'success' => $this->success($message),
+            'error' => $this->error($message),
+            'warn' => $this->warn($message),
+            'comment' => $this->comment($message),
+            default => $this->line($message)
+        };
+    }
+
+    public function getBasePath(string $path = ''): string
+    {
+        return $this->basePath($path);
+    }
+
+    public function getConfigPath(string $path = ''): string
+    {
+        return $this->configPath($path);
+    }
+
+    public function askConfirmation(string $question, bool $default = false): bool
+    {
+        return $this->confirm($question, $default);
+    }
+
+    public function ensureDirectory(string $path): void
+    {
+        $this->ensureDirectoryExists($path);
+    }
 }
