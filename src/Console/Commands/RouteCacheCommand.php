@@ -39,11 +39,13 @@ class RouteCacheCommand extends Command
         // Get route definitions
         $staticRoutes = $router->getStaticRoutes();
         $dynamicRoutes = $router->getDynamicRoutes();
+        $rawRoutes = $router->getRawRoutes();
 
         // Serialize routes to PHP array
         $cacheData = [
             'static' => $this->serializeRoutes($staticRoutes),
             'dynamic' => $this->serializeRoutes($dynamicRoutes),
+            'raw' => $rawRoutes, // Raw routes are already simple arrays
         ];
 
         // Write cache file
@@ -62,9 +64,11 @@ class RouteCacheCommand extends Command
 
         $staticCount = $this->countRoutes($staticRoutes);
         $dynamicCount = $this->countRoutes($dynamicRoutes);
-        $totalCount = $staticCount + $dynamicCount;
+        $rawCount = $this->countRoutes($rawRoutes);
+        $totalCount = $staticCount + $dynamicCount + $rawCount;
 
         $this->success("Routes cached successfully!");
+        $this->info("  Raw routes (zero overhead): {$rawCount}");
         $this->info("  Static routes: {$staticCount}");
         $this->info("  Dynamic routes: {$dynamicCount}");
         $this->info("  Total: {$totalCount}");
